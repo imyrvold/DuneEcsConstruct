@@ -21,6 +21,7 @@ export class DuneEcsConstructStack extends cdk.Stack {
     })
 
     const taskDefinition = new ecs.FargateTaskDefinition(this, 'DuneTaskDefinition', {
+      cpu: 1024,
       memoryLimitMiB: 2048
     });
 
