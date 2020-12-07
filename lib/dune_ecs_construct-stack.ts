@@ -20,19 +20,34 @@ export class DuneEcsConstructStack extends cdk.Stack {
       repositoryName: "dune"
     })
 
-        // Create a load-balanced Fargate service and make it public
-        new ecs_patterns.ApplicationLoadBalancedFargateService(this, "DuneFargateService", {
-          serviceName: "DuneService",
-          cluster: cluster, // Required
-          cpu: 256, // Default is 256
-          desiredCount: 1, // Default is 1
-          taskImageOptions: { 
-            image: ecs.ContainerImage.fromEcrRepository(repository),
-            containerPort: 8080
-          },
-          memoryLimitMiB: 512, // Default is 512
-          publicLoadBalancer: true // Default is false
-        });
+    const taskDefinition = new ecs.FargateTaskDefinition(this, 'DuneTaskDefinition', {
+      memoryLimitMiB: 2048
+    });
+
+    const vaporApp = taskDefinition.addContainer('VaporApp', {
+      image: ecs.ContainerImage.fromEcrRepository(repository),
+      logging: ecs.LogDriver.awsLogs({streamPrefix: "dune"}),
+      memoryReservationMiB: 1024
+    });
+
+    vaporApp.addPortMappings({containerPort: 8080, hostPort: 8080 });
+
+    const mongo = taskDefinition.addContainer('MongoDB', {
+      image: ecs.ContainerImage.fromRegistry("mongo:latest"),
+      memoryReservationMiB: 1024
+    });
+
+    mongo.addPortMappings({containerPort: 27017, hostPort: 27017 });
+
+    // Create a load-balanced Fargate service and make it public
+    new ecs_patterns.ApplicationLoadBalancedFargateService(this, "DuneFargateService", {
+      serviceName: "DuneService",
+      cluster: cluster, // Required
+      cpu: 512, // Default is 256
+      desiredCount: 1, // Default is 1
+      taskDefinition: taskDefinition,
+      publicLoadBalancer: true // Default is false
+    });
     
   }
 }
