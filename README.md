@@ -1,8 +1,15 @@
-# Welcome to your CDK TypeScript project!
+# Welcome to DuneEcsConstruct CDK TypeScript project!
 
-This is a blank project for TypeScript development with CDK.
-
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+This project demonstrates how to use CDK to deploy a Vapor 4 app to ECS Fargate.
+The containers need to be pushed AWS ECR when the ECR repository have been created.
+It is created with this code:
+```
+const repository = new ecr.Repository(this, "dune-repository", {
+      repositoryName: "dune"
+    })
+```
+This is donee in `dune_ecs_construct-stack.js`, I normally just refreshes the ECR-Repositories dashboard  
+until I see that the repository have been created, and then do a `docker push xxxxxxxx.dkr.ecr.eu-west-1.amazonaws.com/dune:latest`
 
 ## Useful commands
 
