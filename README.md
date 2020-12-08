@@ -13,9 +13,9 @@ until I see that the repository have been created after I have done `cdk deploy`
 `docker push xxxxxxxx.dkr.ecr.eu-west-1.amazonaws.com/dune:latest`
 
 The vapor app is expecting to receive requests on port 8080, and the database (MongoDB) is using  
-port 27017. Change this to something else if you have other database you want to use.
+port 27017. Change this to something else if you have other databases you want to use.
 
-To be able to persist the database, I have set up an MomgoDB Atlas account, and use a connectionString  
+To be able to persist the database, I have set up an MongoDB Atlas account, and use a connectionString  
 to the database in my vapor app.
 
 ## Useful commands
